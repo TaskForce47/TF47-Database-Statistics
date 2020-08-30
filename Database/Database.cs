@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TF47_Database.Model;
 using TF47_Database.Model.Enums;
 
@@ -6,6 +7,13 @@ namespace TF47_Database
 {
     public partial class Database : DbContext
     {
+        private readonly IConfiguration _configuration;
+
+        public Database(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public virtual DbSet<ActionLog> ActionLogs { get; set; }
         public virtual DbSet<ActionType> ActionTypes { get; set; }
         public virtual DbSet<Campaign> Campaigns { get; set; }
@@ -44,9 +52,9 @@ namespace TF47_Database
 
                 entity.Property(e => e.NameFirstTimeSeen).IsRequired().HasMaxLength(120);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(120);
-                entity.Property(e => e.FirstTimeSeen).IsRequired().HasComputedColumnSql("NOW()");
+                entity.Property(e => e.FirstTimeSeen).IsRequired().HasDefaultValueSql("NOW()");
                 entity.Property(e => e.Connections).IsRequired().HasComputedColumnSql("0");
-                entity.Property(e => e.LastTimeSeen).IsRequired().HasComputedColumnSql("NOW()");
+                entity.Property(e => e.LastTimeSeen).IsRequired().HasDefaultValueSql("NOW()");
 
                 entity.HasOne(x => x.Player).WithOne(x => x.PlayerInformation)
                     .HasForeignKey<PlayerInformation>(x => x.PlayerId);
@@ -172,7 +180,7 @@ namespace TF47_Database
                 entity.HasIndex(e => e.PlayerId);
 
                 entity.Property(e => e.MissionTime).IsRequired().HasDefaultValueSql("0");
-                entity.Property(e => e.Reason).IsRequired().HasMaxLength(512).HasDefaultValueSql("unknown reason");
+                entity.Property(e => e.Reason).IsRequired().HasMaxLength(512).HasDefaultValue("unknown reason");
                 entity.Property(e => e.SessionFinished).IsRequired().HasDefaultValueSql("false");
                 entity.Property(e => e.TicketChange).IsRequired().HasDefaultValueSql("0");
                 entity.Property(e => e.TicketNew).IsRequired().HasDefaultValueSql("0");
@@ -192,7 +200,7 @@ namespace TF47_Database
                 entity.HasIndex(e => e.PlayerId);
 
                 entity.Property(e => e.MissionTime).IsRequired().HasDefaultValueSql("0");
-                entity.Property(e => e.Group).IsRequired().HasMaxLength(255).HasDefaultValueSql("unknown group");
+                entity.Property(e => e.Group).IsRequired().HasMaxLength(255).HasDefaultValue("unknown group");
                 entity.Property(e => e.IsGroupLeader).IsRequired().HasDefaultValueSql("false");
                 entity.Property(e => e.Position).IsRequired().HasDefaultValue(new float[] {0, 0, 0});
                 entity.Property(e => e.Dir).IsRequired().HasDefaultValueSql("0");
@@ -206,9 +214,9 @@ namespace TF47_Database
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Description).IsRequired().HasDefaultValueSql("unknown permission");
+                entity.Property(e => e.Description).IsRequired().HasDefaultValue("unknown permission");
             });
-            
+
             modelBuilder.Entity<PlayerWhitelisting>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -219,5 +227,11 @@ namespace TF47_Database
             });
         }
 
-    }
+        partial void OnConfiguringPartial(DbContextOptionsBuilder optionsBuilder) 
+        {
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("defaultConnection"));
+            optionsBuilder.UseSnakeCaseNamingConvention();
+        }
+
+}
 }

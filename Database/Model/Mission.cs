@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TF47_Database.Model.Enums;
 
 namespace TF47_Database.Model
 {
