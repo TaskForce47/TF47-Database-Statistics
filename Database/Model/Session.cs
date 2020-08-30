@@ -19,7 +19,7 @@ namespace TF47_Database.Model
         public Mission Mission { get; set; }
         public uint MissionId { get; set; }
         public Campaign Campaign { get; set; }
-        public uint CampaignId { get; set; }
+        public uint? CampaignId { get; set; }
         public DateTime TimeStarted { get; set; }
         public IEnumerable<ChatLog> Chats { get; set; }
         public IEnumerable<PerformancePlayer> PerformancePlayers { get; set; }

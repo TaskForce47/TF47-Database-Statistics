@@ -1,4 +1,6 @@
-﻿namespace TF47_Database.Model
+﻿using TF47_Database.Model.Enums;
+
+namespace TF47_Database.Model
 {
     public class PositionTracking
     {

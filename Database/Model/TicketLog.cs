@@ -15,6 +15,6 @@ namespace TF47_Database.Model
         public DateTime TimeChanged { get; set; }
         public bool SessionFinished { get; set; }
         public Player Player { get; set; }
-        public uint PlayerId { get; set; }
+        public uint? PlayerId { get; set; }
     }
 }
