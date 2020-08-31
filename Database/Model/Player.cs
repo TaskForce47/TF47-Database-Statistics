@@ -13,6 +13,7 @@ namespace TF47_Database.Model
 
         public uint Id { get; set; }
         public string PlayerUid { get; set; }
+        public string BattleyeId { get; set; }
 
         public IEnumerable<ChatLog> Chats { get; set; }
         public IEnumerable<PerformancePlayer> PlayerPerformance { get; set; }

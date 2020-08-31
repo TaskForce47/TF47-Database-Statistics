@@ -43,7 +43,8 @@ namespace TF47_Database
             {
                 entity.HasKey(e => e.Id);
                 entity.HasIndex(e => e.PlayerUid).IsUnique();
-                entity.Property(e => e.PlayerUid).HasMaxLength(255);
+                entity.Property(e => e.PlayerUid).IsRequired().HasMaxLength(255);
+                entity.Property(e => e.BattleyeId).HasMaxLength(255);
             });
 
             modelBuilder.Entity<PlayerInformation>(entity =>
